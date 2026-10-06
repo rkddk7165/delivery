@@ -1,7 +1,7 @@
 package com.sparta.delivery.domain.user.enums;
 
 
-public enum Role {
+public enum UserRole {
     CUSTOMER,
     OWNER
 }
