@@ -1,6 +1,8 @@
 package com.sparta.delivery.global.util;
 
 import com.sparta.delivery.domain.user.enums.UserRole;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -41,5 +43,37 @@ public class JwtUtil {
                 .expiration(new Date(now.getTime() + ACCESS_TOKEN_TIME))
                 .signWith(key)
                 .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
+
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public String getUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    public UserRole getRole(String token) {
+        String role = getClaims(token)
+                .get(AUTHORIZATION_KEY, String.class);
+
+        return UserRole.valueOf(role);
     }
 }

@@ -52,4 +52,20 @@ public class Menu extends BaseEntity {
     public void activate(){
         this.status = MenuStatus.ACTIVE;
     }
+
+
+    /**
+     * 메뉴 수정 메서드
+     */
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updatePrice(Integer price) {
+        this.price = price;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
 }

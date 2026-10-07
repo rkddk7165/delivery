@@ -7,6 +7,8 @@ import com.sparta.delivery.domain.user.dto.SignupResponse;
 import com.sparta.delivery.domain.user.entity.User;
 import com.sparta.delivery.domain.user.exception.DuplicateNicknameException;
 import com.sparta.delivery.domain.user.exception.DuplicateUsernameException;
+import com.sparta.delivery.domain.user.exception.InvalidPasswordException;
+import com.sparta.delivery.domain.user.exception.InvalidUsernameException;
 import com.sparta.delivery.domain.user.repository.UserRepository;
 import com.sparta.delivery.global.util.JwtUtil;
 import jakarta.validation.Valid;
@@ -51,12 +53,12 @@ public class UserService {
         //username 조회
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() ->
-                        new IllegalArgumentException("존재하지 않는 ID입니다.")
+                        new InvalidUsernameException()
                 );
 
         //password 조회
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidPasswordException();
         }
 
         //access 토큰 발급
