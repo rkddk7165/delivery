@@ -5,8 +5,8 @@ spring:
   # DB 연결 — 3-3의 docker run 값과 똑같이
   datasource:
     url: jdbc:postgresql://localhost:5432/delivery
-    username: delivery
-    password: delivery1234
+    username: ${DB_USERNAME:delivery}
+    password: ${DB_PASSWORD}
 
   # JPA
   jpa:
@@ -19,4 +19,4 @@ spring:
 
 jwt:
   secret:
-    key: 89lZ43NU64Vf1b98lDuEoJx6nQJtlgVoU10GhgME7Qw=
+    key: ${JWT_SECRET_KEY}

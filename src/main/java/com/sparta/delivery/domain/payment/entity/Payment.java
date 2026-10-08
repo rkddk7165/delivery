@@ -35,7 +35,7 @@ public class Payment extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    public Payment(PaymentType paymentType, Order order) {
+    public Payment(Order order, PaymentType paymentType) {
         this.totalPrice = order.getTotalPrice();
         this.paymentType = paymentType;
         this.status = PaymentStatus.COMPLETED;
