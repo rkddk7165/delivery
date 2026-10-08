@@ -137,9 +137,17 @@ erDiagram
 
 ## 인프라 설계
 
-Postman
-→ Spring Security Filter
-→ Controller
-→ Service
-→ Repository
-→ PostgreSQL
+```mermaid
+flowchart LR
+    A[Postman] -->|HTTP Request| B[Spring Security Filter Chain]
+    B --> C[JwtAuthenticationFilter]
+    C --> D[Controller]
+    D --> E[Service]
+    E --> F[Repository]
+    F --> G[(PostgreSQL)]
+
+    G --> F
+    F --> E
+    E --> D
+    D -->|HTTP Response| A
+```
