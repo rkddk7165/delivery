@@ -1,6 +1,7 @@
 package com.sparta.delivery.global.exception;
 
 import com.sparta.delivery.domain.menu.exception.MenuNotFoundException;
+import com.sparta.delivery.domain.order.exception.InvalidOrderStatusException;
 import com.sparta.delivery.domain.user.exception.DuplicateNicknameException;
 import com.sparta.delivery.domain.user.exception.DuplicateUsernameException;
 import com.sparta.delivery.domain.user.exception.UserNotFoundException;
@@ -60,6 +61,17 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+
+    //      403     //
+    @ExceptionHandler(InvalidOrderStatusException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidOrderStatus(
+            InvalidOrderStatusException e
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(Map.of("message", e.getMessage()));
     }
 

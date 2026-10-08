@@ -1,5 +1,9 @@
 package com.sparta.delivery.domain.order.controller;
 
+import com.sparta.delivery.domain.order.dto.OrderRequest;
+import com.sparta.delivery.domain.order.dto.OrderResponse;
+import com.sparta.delivery.domain.order.dto.OrderStatusUpdateRequest;
+import com.sparta.delivery.domain.order.service.OrderService;
 import com.sparta.delivery.global.security.AuthUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +19,20 @@ import java.util.List;
 @RequestMapping("/api/orders")
 public class OrderController {
 
+    private final OrderService orderService;
+
     //주문 생성
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody OrderRequest request
     ){
+        OrderResponse response = orderService.create(authUser.username(), request);
+
+        return ResponseEntity
+                .status(201)
+                .body(response);
 
 
     }
@@ -29,18 +41,24 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getOrders(
             @AuthenticationPrincipal AuthUser authUser
-    ){
-
+    ) {
+        return ResponseEntity.ok(
+                orderService.getOrders(authUser.username())
+        );
     }
 
     //주문 취소
     @PreAuthorize("hasRole('CUSTOMER')")
     @PatchMapping("/{orderId}/cancel")
-    public ResponseEntity<> cancelOrder(
+    public ResponseEntity<OrderResponse> cancelOrder(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long orderId
     ){
+        OrderResponse response = orderService.cancel(orderId, authUser.username());
 
+        return ResponseEntity
+                .status(200)
+                .body(response);
     }
 
     //주문 상태 변경 (주문 수락, 배달 완료)
@@ -51,7 +69,11 @@ public class OrderController {
             @PathVariable Long orderId,
             @Valid @RequestBody OrderStatusUpdateRequest request
     ){
+        OrderResponse response = orderService.updateStatus(orderId, authUser.username(), request);
 
+        return ResponseEntity
+                .status(200)
+                .body(response);
     }
 
 }

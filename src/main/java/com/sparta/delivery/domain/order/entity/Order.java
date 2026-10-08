@@ -2,6 +2,7 @@ package com.sparta.delivery.domain.order.entity;
 
 import com.sparta.delivery.domain.menu.entity.Menu;
 import com.sparta.delivery.domain.order.enums.OrderStatus;
+import com.sparta.delivery.domain.order.exception.InvalidOrderStatusException;
 import com.sparta.delivery.domain.user.entity.User;
 import com.sparta.delivery.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -54,7 +55,7 @@ public class Order extends BaseEntity {
      */
     public void cancel() {
         if (this.status != OrderStatus.ORDERED) {
-            throw new IllegalStateException("주문 요청 상태에서만 취소할 수 있습니다.");
+            throw new InvalidOrderStatusException("주문 요청 상태에서만 취소할 수 있습니다.");
         }
 
         this.status = OrderStatus.CANCELED;
@@ -62,7 +63,7 @@ public class Order extends BaseEntity {
 
     public void pay() {
         if (this.status != OrderStatus.ORDERED) {
-            throw new IllegalStateException("주문 요청 상태에서만 결제할 수 있습니다.");
+            throw new InvalidOrderStatusException("주문 요청 상태에서만 결제할 수 있습니다.");
         }
 
         this.status = OrderStatus.PAID;
@@ -70,7 +71,7 @@ public class Order extends BaseEntity {
 
     public void accept() {
         if (this.status != OrderStatus.PAID) {
-            throw new IllegalStateException("결제 완료 상태에서만 주문을 수락할 수 있습니다.");
+            throw new InvalidOrderStatusException("결제 완료 상태에서만 주문을 수락할 수 있습니다.");
         }
 
         this.status = OrderStatus.ACCEPTED;
@@ -78,7 +79,7 @@ public class Order extends BaseEntity {
 
     public void complete() {
         if (this.status != OrderStatus.ACCEPTED) {
-            throw new IllegalStateException("주문 수락 상태에서만 완료할 수 있습니다.");
+            throw new InvalidOrderStatusException("주문 수락 상태에서만 완료할 수 있습니다.");
         }
 
         this.status = OrderStatus.COMPLETED;
